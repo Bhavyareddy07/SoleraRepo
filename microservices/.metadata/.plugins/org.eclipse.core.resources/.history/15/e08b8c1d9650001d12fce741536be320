@@ -1,0 +1,72 @@
+package com.example.collegeservice.exceptions;
+
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.collegeservice.entities.College;
+import com.example.collegeservice.entities.Student;
+import com.example.collegeservice.repositories.CollegeRepositories;
+import com.example.collegeservice.repositories.StudentRepositories;
+import com.example.collegeservice.service.CollegeService;
+
+
+
+@Service
+public class CollegeServiceImpl implements CollegeService {
+	@Autowired
+	private CollegeRepositories collegeRepo;
+	@Autowired
+	private StudentRepositories studentRepo;
+
+	
+
+	@Override
+	public College retrieveCollegeById(Integer collegeId) throws CollegeNotFoundException{
+		Optional<College> colleges = collegeRepo.findById(collegeId);
+		if(colleges.isPresent()) {
+			return colleges.get();
+		}else {
+			throw new CollegeNotFoundException();
+		}
+		
+	}
+
+	@Override
+	public Student retrieveStudentById(Integer studentId)  throws StudentNotFoundException{
+		Optional<Student> student = studentRepo.findById(studentId);
+		if(student.isPresent()) {
+			return student.get();
+		}else {
+			throw new StudentNotFoundException();
+		}
+	}
+
+	@Override
+	public List<Student> retrieveStudentsByCollegeId(Integer collegeId) throws StudentNotFoundException{
+		Optional<College> colleges = collegeRepo.findById(collegeId);
+		if(colleges.isPresent()) {
+			return colleges.get().getStudent();
+		}else {
+			throw new StudentNotFoundException();
+		}
+	}
+
+	
+
+	@Override
+	public College insertCollege(College college) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Student insertStudent(Student student) {
+		// TODO Auto-generated method stub
+		return studentRepo.save(student);
+	}
+
+}
